@@ -20,14 +20,17 @@ export default function Login() {
     password: yup
       .string()
       .required("Informar uma senha")
-      .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-        "Sua senha deve conter pelo menos 8 caracteres, 1 letra maiúscula, 1 letra minúscula, 1 número e 1 caractere especial "
-      ),
+      .min(6, "Insira pelo menos 6 caracteres"),
   });
 
   function toRegister() {
     history.push("/register");
+  }
+
+  if (localStorage.getItem("hubToken") !== null) {
+    let module = localStorage.getItem("hubModule");
+    let user = localStorage.getItem("hubUser");
+    history.push(`/home/${user}/${module}`);
   }
 
   function onSubmitHandle(data) {
@@ -35,6 +38,8 @@ export default function Login() {
       .then((response) => {
         localStorage.setItem("hubToken", response.data.token);
         localStorage.setItem("hubId", response.data.user.id);
+        localStorage.setItem("hubModule", response.data.user.course_module);
+        localStorage.setItem("hubUser", response.data.user.name);
         history.push(
           `/home/${response.data.user.name}/${response.data.user.course_module}`
         );

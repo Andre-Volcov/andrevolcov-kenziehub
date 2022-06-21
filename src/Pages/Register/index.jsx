@@ -24,10 +24,7 @@ export default function Register() {
     password: yup
       .string()
       .required("Informar uma senha")
-      .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-        "Sua senha deve conter pelo menos 8 caracteres, 1 letra maiúscula, 1 letra minúscula, 1 número e 1 caractere especial "
-      ),
+      .min(6, "Insira pelo menos 6 caracteres"),
     confirmPassword: yup
       .string()
       .required("Sua senha precisa ser igual a anterior")
@@ -39,6 +36,12 @@ export default function Register() {
 
   function back() {
     history.push("/");
+  }
+
+  if (localStorage.getItem("hubToken")) {
+    let module = localStorage.getItem("hubModule");
+    let user = localStorage.getItem("hubUser");
+    history.push(`/home/${user}/${module}`);
   }
 
   function onSubmitHandle(data) {
